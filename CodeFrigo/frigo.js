@@ -31,6 +31,7 @@ function nouveauProduit(){
         return response.json()
         })
         .then( (dataJSON) => {
+            listeMesArticles();
         })
         .catch( (error) => console.log(error));
 }
@@ -55,12 +56,18 @@ function listeMesArticles(){
             for (let a of articles) {
                 resHTML = 
                     resHTML + "<li>" + a.nom + " (" + a.qte + ")"
-                    + "<button id=\"plusUn\" name=\"plusUn\">+1</button>"
-                    + " <button id=\"moinsUn\" name=\"moinsUn\">-1</button>"
-                    + " <button id=\"suppr\" name=\"supprimer\">Supprimer</button>"
+                    + "<button id=\"plusUn_" + a.id + "\" " + "name=\"plusUn\">+1</button>"
+                    + " <button id=\"moinsUn_" + a.id + "\" " + "name=\"moinsUn\">-1</button>"
+                    + " <button id=\"suppr_" + a.id + "\" " + "name=\"supprimer\">Supprimer</button>"
                     + "</li>";
+                
             }
             document.getElementById("mesArticles").innerHTML = resHTML;
+            for (let a of articles) {
+                document.getElementById("plusUn_" + a.id).addEventListener("click", plusOuMoinsUn);
+                document.getElementById("moinsUn_" + a.id).addEventListener("click", plusOuMoinsUn);
+            }
+            
         })
         .catch((error) => {
             console.log(error);
@@ -68,7 +75,6 @@ function listeMesArticles(){
 }
 
 document.getElementById("boutonRechercher").addEventListener("click", rechercher);
-document.getElementById("recherche").addEventListener("keyup", rechercher(event));
 
 //Fonction permettant de rechercher un article dans la liste de ceux de l'API
 function rechercher(){
@@ -90,35 +96,76 @@ function rechercher(){
                 let nomP = p.nom;
                 nomP = p.nom.toLowerCase();
                 nomProduit = nomProduit.toLowerCase();
-                if(nomP.search(nomProduit)>=0 /*p.nom === nomProduit*/){
+                if(nomP.search(nomProduit)>=0){
                     resHTML =
-                        resHTML + "<li>" + p.nom + " (" + p.qte + ")"
+                        resHTML + "<li id=" + p.id + "ID >" + p.nom + " (" + p.qte + ")"
                         + "<button id=\"plusUn\" name=\"plusUn\">+1</button>"
                         + " <button id=\"moinsUn\" name=\"moinsUn\">-1</button>"
                         + " <button id=\"suppr\" name=\"supprimer\">Supprimer</button>"
                         + "</li>";
                 }
             }
-            document.getElementById("resultatRecherche").innerHTML= resHTML;
+            document.getElementById("mesArticles").innerHTML= resHTML;
         })
         .catch((error) => console.log(error));
 }
 
-//à corriger
-/*
-function rechercher(event){
-    if (event.code === 'Enter') { 
+document.getElementById("recherche").addEventListener("keydown", rechercherEnter);
+
+function rechercherEnter(event){
+    if (event.key === "Enter") { 
         event.preventDefault();
         document.getElementById("boutonRechercher").click();
     }
 }
-*/
-/*
-document.getElementById("plusUn").addEventListener("click", ajouteUn);
 
-function ajouteUn(){
-    
-}*/
+function getElementFromAPI(idProduit){
+    const url = "https://webmmi.iut-tlse3.fr/~jean-marie.pecatte/frigo/public/24/produits";
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    let produit = "";
+    const fetchOptions = {
+        method: "GET"
+    }
+    return fetch(url, fetchOptions)
+        .then((response) => {
+            return response.json();
+        })
+        .then((dataJSON) => {
+            let produits = dataJSON;
+            for(let p of produits){
+                if (idProduit == p.id){
+                    produit = p;
+                }
+            }
+            return produit;
+        })
+        .catch((error) => console.log(error));
+}
+
+async function plusOuMoinsUn(event){
+    const url = "https://webmmi.iut-tlse3.fr/~jean-marie.pecatte/frigo/public/24/produits";
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    let idBouton = event.target.id;
+    let idProduit = idBouton.split("_")[1];
+    let produit = await getElementFromAPI(idProduit); 
+    if(idBouton.split("_")[0] == "plusUn") produit.qte ++;
+    else if(idBouton.split("_")[0] == "moinsUn") produit.qte--;
+    const fetchOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: JSON.stringify(produit)
+    }
+    fetch(url, fetchOptions)
+        .then( (response) => {
+            return response.json();
+        })
+        .then( (dataJSON) => {
+            listeMesArticles();
+        })
+        .catch( (error) => console.log(error));
+}
 
 /*
 document.getElementById("recherche").addEventListener("input", preciseRecherche);
