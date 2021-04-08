@@ -19,6 +19,7 @@ function nouveauProduit(){
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     let nomProduit = document.getElementById("newArticle").value;
+    nomProduit = capitalize(nomProduit);
     let qteProduit = document.getElementById("quantite").value;
     let produit = {"nom":nomProduit,"qte":qteProduit};
     const fetchOptions = {
@@ -31,6 +32,8 @@ function nouveauProduit(){
         return response.json()
         })
         .then( (dataJSON) => {
+            viderLabel("newArticle");
+            viderLabel("quantite");
             listeMesArticles();
         })
         .catch( (error) => console.log(error));
@@ -55,7 +58,7 @@ function listeMesArticles(){
             let resHTML = "";
             for (let a of articles) {
                 resHTML = 
-                    resHTML + "<li>" + a.nom + " (" + a.qte + ")"
+                    resHTML + "<li id=\"listeElement_" + a.id + "\">" + a.nom + " (" + a.qte + ")"
                     + "<button id=\"plusUn_" + a.id + "\" " + "name=\"plusUn\">+1</button>"
                     + " <button id=\"moinsUn_" + a.id + "\" " + "name=\"moinsUn\">-1</button>"
                     + " <button id=\"suppr_" + a.id + "\" " + "name=\"supprimer\">Supprimer</button>"
@@ -66,6 +69,7 @@ function listeMesArticles(){
             for (let a of articles) {
                 document.getElementById("plusUn_" + a.id).addEventListener("click", plusOuMoinsUn);
                 document.getElementById("moinsUn_" + a.id).addEventListener("click", plusOuMoinsUn);
+                document.getElementById("suppr_" + a.id).addEventListener("click", supprimer);
             }
             
         })
@@ -90,6 +94,7 @@ function rechercher(){
             return response.json();
         })
         .then((dataJSON) => {
+            viderLabel("recherche");
             let produits = dataJSON;
             let resHTML = "";
             for(let p of produits){
@@ -98,14 +103,10 @@ function rechercher(){
                 nomProduit = nomProduit.toLowerCase();
                 if(nomP.search(nomProduit)>=0){
                     resHTML =
-                        resHTML + "<li id=" + p.id + "ID >" + p.nom + " (" + p.qte + ")"
-                        + "<button id=\"plusUn\" name=\"plusUn\">+1</button>"
-                        + " <button id=\"moinsUn\" name=\"moinsUn\">-1</button>"
-                        + " <button id=\"suppr\" name=\"supprimer\">Supprimer</button>"
-                        + "</li>";
+                        resHTML + "<li> <a href=\"#listeElement_" + p.id + "\">" + p.nom + "</a> </li>";
                 }
             }
-            document.getElementById("mesArticles").innerHTML= resHTML;
+            document.getElementById("resultatRecherche").innerHTML= resHTML;
         })
         .catch((error) => console.log(error));
 }
@@ -152,6 +153,7 @@ async function plusOuMoinsUn(event){
     let produit = await getElementFromAPI(idProduit); 
     if(idBouton.split("_")[0] == "plusUn") produit.qte ++;
     else if(idBouton.split("_")[0] == "moinsUn") produit.qte--;
+    if(produit.qte == 0)supprimer(event);
     const fetchOptions = {
         method: "PUT",
         headers: myHeaders,
@@ -167,15 +169,34 @@ async function plusOuMoinsUn(event){
         .catch( (error) => console.log(error));
 }
 
-/*
-document.getElementById("recherche").addEventListener("input", preciseRecherche);
-function preciseRecherche(){
+// Fonction permettant de supprimer complètement un article quelle que soit sa quantité
+function supprimer(event){
     const url = "https://webmmi.iut-tlse3.fr/~jean-marie.pecatte/frigo/public/24/produits";
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    let idBouton = event.target.id;
+    let idProduit = idBouton.split("_")[1];
+    //let produit = await getElementFromAPI(idProduit); 
     const fetchOptions = {
-        method: "GET"
+        method: "DELETE",
+        headers: myHeaders
     }
-
+    fetch(url + "/" + idProduit, fetchOptions)
+        .then( (response) => {
+            return response.json();
+        })
+        .then( (dataJSON) => {
+            listeMesArticles();
+        })
+        .catch( (error) => console.log(error));
 }
-*/
+
+function capitalize(texte){
+    texte = texte.toLowerCase();
+    texte = texte.charAt(0).toUpperCase() + texte.slice(1);
+    return texte;
+}
+
+function viderLabel(labelId){
+    document.getElementById(labelId).value = "";
+}
