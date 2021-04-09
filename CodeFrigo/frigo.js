@@ -58,13 +58,12 @@ function listeMesArticles(){
             let resHTML = "";
             for (let a of articles) {
                 resHTML = 
-                    resHTML + "<li id=\"listeElement_" + a.id + "\">" + a.nom
+                    resHTML + "<li class=\"listeElement\" id=\"listeElement_" + a.id + "\">" + a.nom
                     + "<img src=\"Images/moins.png\" alt=\"-1\" class=\"imageMoins\" id=\"moinsUn_" + a.id + "\" HSPACE=\"5\">"
                     + a.qte
                     + "<img src=\"Images/plus.png\" alt=\"+1\" class=\"imagePlus\" id=\"plusUn_" + a.id + "\" HSPACE=\"5\">"
                     + "<img src=\"Images/supprimer.png\" alt=\"suppr\" class=\"imageSupprimer\" id=\"suppr_" + a.id + "\" HSPACE=\"5\">"
                     + "</li>";
-                
             }
             document.getElementById("mesArticles").innerHTML = resHTML;
             for (let a of articles) {
@@ -104,10 +103,18 @@ function rechercher(){
                 nomProduit = nomProduit.toLowerCase();
                 if(nomP.search(nomProduit)>=0){
                     resHTML =
-                        resHTML + "<li> <a href=\"#listeElement_" + p.id + "\">" + p.nom + "</a> </li>";
+                        resHTML + "<li class=\"listeElementTrouves\" id=\"element_" + p.id + "\""
+                        + "> <a id=\"trouveElement_" + p.id + "\" href=\"#listeElement_" + p.id 
+                        + "\">" + p.nom + "</a> </li>";
                 }
             }
             document.getElementById("resultatRecherche").innerHTML= resHTML;
+
+            let itemsListe = document.getElementsByClassName("listeElementTrouves");
+            for (i = 0; i < itemsListe.length; i++) {
+                let idProduit = itemsListe[i].id.split("_")[1];
+                document.getElementById("trouveElement_" + idProduit).addEventListener("click", surligneElement);
+            }
         })
         .catch((error) => console.log(error));
 }
@@ -200,4 +207,19 @@ function capitalize(texte){
 
 function viderLabel(labelId){
     document.getElementById(labelId).value = "";
+}
+
+function surligneElement(event){
+    let idBouton = event.target.id;
+    let idProduit = idBouton.split("_")[1];
+    let elementListe = document.getElementById("listeElement_" + idProduit);
+    elementListe.style.backgroundColor = 'yellow';
+    elementListe.style.transitionProperty = 'background-color';
+    elementListe.style.transitionDuration = '2s';
+    elementListe.addEventListener("transitionend", function() {
+        elementListe.style.backgroundColor = 'transparent';
+        elementListe.style.transitionProperty = 'background-color';
+        elementListe.style.transitionDelay = '1s';
+        elementListe.style.transitionDuration = '2s';
+    });
 }
