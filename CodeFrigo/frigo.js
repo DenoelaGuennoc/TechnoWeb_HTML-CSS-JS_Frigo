@@ -4,12 +4,19 @@ document.getElementById("imageFrigo").addEventListener("click", ouvreFrigo);
 //Permet de passer d'un frigo fermé à un frigo ouvert
 function ouvreFrigo() {
     let imageActuelle = document.getElementById("imageFrigo");
+    let elementsGestionFrigo = document.getElementsByClassName("contenuFrigo");
     if(imageActuelle.src.match("Images/FrigoFerme.png")){
         imageActuelle.src = "Images/FrigoOuvert.png";
         listeMesArticles();
+        for(i=0; i<elementsGestionFrigo.length; i++){
+            elementsGestionFrigo[i].style.display = "block";
+        }
     }
     else {
         imageActuelle.src = "Images/FrigoFerme.png";
+        for(i=0; i<elementsGestionFrigo.length; i++){
+            elementsGestionFrigo[i].style.display = "none";
+        }
     }
 }
 
@@ -22,24 +29,51 @@ function nouveauProduit(){
     let nomProduit = document.getElementById("newArticle").value;
     nomProduit = capitalize(nomProduit);
     let qteProduit = document.getElementById("quantite").value;
-    let produit = {"nom":nomProduit,"qte":qteProduit};
-    const fetchOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify(produit)
+    if(qteProduit == 0 || qteProduit == "") qteProduit = 1;
+    try{
+        if (qteProduit < 0) throw Error("La quantité entrée doit être supérieure à 0");
+        else {
+            let produit = {"nom":nomProduit,"qte":qteProduit};
+            const fetchOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: JSON.stringify(produit)
+            }
+            fetch(url, fetchOptions)
+                .then( (response) => {
+                    if (produit.qte <= 0) throw "La quantité entrée doit être supérieure à 0";
+                    if (isNaN(qteProduit)) throw "La quantité entrée doit être un entier";
+                    else return response.json()
+                })
+                .then( (dataJSON) => {
+                        viderLabel("newArticle");
+                        viderLabel("quantite");
+                        listeMesArticles();
+                        document.getElementById("noteAjoutArticle").innerHTML =
+                            "Le produit \"" + produit.nom + "\" a bien été ajouté en " + produit.qte + " exemplaire(s)";
+                    
+                })
+                .catch( (error) => {
+                    document.getElementById("noteAjoutArticle").innerHTML = "Attention : " + error;
+                    console.log(error);
+                });
+        }
     }
-    fetch(url, fetchOptions)
-        .then( (response) => {
-        return response.json()
-        })
-        .then( (dataJSON) => {
-            viderLabel("newArticle");
-            viderLabel("quantite");
-            listeMesArticles();
-        })
-        .catch( (error) => console.log(error));
+    catch (error){
+        document.getElementById("noteAjoutArticle").innerHTML = "Attention : " + error;
+    }
 }
 
+document.getElementById("quantite").addEventListener("keydown", nouveauEnter);
+document.getElementById("newArticle").addEventListener("keydown", nouveauEnter);
+
+function nouveauEnter(event){
+    let nomProduit = document.getElementById("newArticle").value;
+    if (nomProduit !== "" && event.key === "Enter") { 
+        event.preventDefault();
+        document.getElementById("ajouterArticle").click();
+    }
+}
 
 //Fonction permettant d'afficher la liste des articles enregistrés dans l'API
 function listeMesArticles(){
@@ -96,18 +130,24 @@ function rechercher(){
         .then((dataJSON) => {
             viderLabel("recherche");
             let produits = dataJSON;
-            let resHTML = "";
-            for(let p of produits){
-                let nomP = p.nom;
-                nomP = p.nom.toLowerCase();
-                nomProduit = nomProduit.toLowerCase();
-                if(nomP.search(nomProduit)>=0){
-                    resHTML =
-                        resHTML + "<li class=\"listeElementTrouves\" id=\"element_" + p.id + "\""
-                        + "> <a id=\"trouveElement_" + p.id + "\" href=\"#listeElement_" + p.id 
-                        + "\">" + p.nom + "</a> </li>";
+            let resHTML = "Voici les produits correspondants à votre recherche : \n";
+            if (nomProduit != ""){;
+                for(let p of produits){
+                    let nomP = p.nom;
+                    nomP = p.nom.toLowerCase();
+                    nomProduit = nomProduit.toLowerCase();
+                    if(nomP.search(nomProduit)>=0){
+                        resHTML =
+                            resHTML + "<li class=\"listeElementTrouves\" id=\"element_" + p.id + "\""
+                            + "> <a id=\"trouveElement_" + p.id + "\" href=\"#listeElement_" + p.id 
+                            + "\">" + p.nom + "</a> </li>";
+                    }
+                }
+                if(resHTML == "Voici les produits correspondants à votre recherche : \n"){
+                    resHTML = "Aucun produit dans votre frigo ne correspond à votre recherche";
                 }
             }
+            else resHTML = "";
             document.getElementById("resultatRecherche").innerHTML= resHTML;
 
             let itemsListe = document.getElementsByClassName("listeElementTrouves");
