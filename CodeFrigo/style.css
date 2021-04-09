@@ -5,6 +5,10 @@
 body{
     font-size: 1em;
     font-family: "Arial", "Helvetica", "sans-serif";
+    background: 
+        linear-gradient(217deg, rgba(255, 0, 0, 0.8), rgba(255,0,0,0) 70.71%),
+        linear-gradient(127deg, rgba(0, 255, 0, 0.8), rgba(0,255,0,0) 70.71%),
+        linear-gradient(336deg, rgba(0, 0, 255, 0.8), rgba(0,0,255,0) 70.71%);;
 }
 
 .row::after {
@@ -32,8 +36,10 @@ body{
 .col-12 {width: 100%;}
 
 .header {
-    color: red;
-    padding-left: 15px;
+    color: rgb(0, 4, 255);
+    padding-left: 10%;
+    text-shadow: 2px 1px #000;
+    font-size: 1.3em;
 }
 
 #imageFrigo {
@@ -46,10 +52,34 @@ body{
 }
 
 .contenuFrigo {
+    background-color: white;
+    border-radius: 50% 20% / 10% 40%;
+    opacity: 0.9;
     display: none;
+}
+
+.contenu {
+    text-align: center;
 }
 
 .imagePlus, .imageMoins, .imageSupprimer {
     width: 1em;
     height: auto;
+}
+
+#mesArticles, #resultatRecherche{
+    list-style-type: none;
+}
+
+input {
+    border-radius: 10px 100px / 120px;
+}
+
+button {
+    border-radius: 5px;
+    background: linear-gradient(rgba(25, 0, 255, 0.568) 10%, white);
+}
+
+button:hover{
+    background: linear-gradient(white, rgba(25, 0, 255, 0.568));
 }

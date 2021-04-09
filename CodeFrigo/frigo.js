@@ -10,6 +10,8 @@ function ouvreFrigo() {
         listeMesArticles();
         for(i=0; i<elementsGestionFrigo.length; i++){
             elementsGestionFrigo[i].style.display = "block";
+            //elementsGestionFrigo[i].style.backgroundColor = "white";
+            //elementsGestionFrigo[i].style.Opacity = "0.5";
         }
     }
     else {
