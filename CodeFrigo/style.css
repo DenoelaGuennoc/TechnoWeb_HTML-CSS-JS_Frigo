@@ -55,11 +55,15 @@ body{
     background-color: white;
     border-radius: 50% 20% / 10% 40%;
     opacity: 0.9;
+    text-align: center;
+}
+
+.frigoOuvert {
     display: none;
 }
 
-.contenu {
-    text-align: center;
+.frigoFerme {
+    display: block;
 }
 
 .imagePlus, .imageMoins, .imageSupprimer {

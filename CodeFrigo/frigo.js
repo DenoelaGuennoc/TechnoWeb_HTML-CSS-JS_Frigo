@@ -4,20 +4,25 @@ document.getElementById("imageFrigo").addEventListener("click", ouvreFrigo);
 //Permet de passer d'un frigo fermé à un frigo ouvert
 function ouvreFrigo() {
     let imageActuelle = document.getElementById("imageFrigo");
-    let elementsGestionFrigo = document.getElementsByClassName("contenuFrigo");
+    let elementsGestionFrigoOuvert = document.getElementsByClassName("frigoOuvert");
+    let elementsGestionFrigoFerme = document.getElementsByClassName("frigoFerme");
     if(imageActuelle.src.match("Images/FrigoFerme.png")){
         imageActuelle.src = "Images/FrigoOuvert.png";
         listeMesArticles();
-        for(i=0; i<elementsGestionFrigo.length; i++){
-            elementsGestionFrigo[i].style.display = "block";
-            //elementsGestionFrigo[i].style.backgroundColor = "white";
-            //elementsGestionFrigo[i].style.Opacity = "0.5";
+        for(j=0; j<elementsGestionFrigoFerme.length; j++){
+            elementsGestionFrigoFerme[j].style.display = "none";
+        }
+        for(i=0; i<elementsGestionFrigoOuvert.length; i++){
+            elementsGestionFrigoOuvert[i].style.display = "block";
         }
     }
     else {
         imageActuelle.src = "Images/FrigoFerme.png";
-        for(i=0; i<elementsGestionFrigo.length; i++){
-            elementsGestionFrigo[i].style.display = "none";
+        for(j=0; j<elementsGestionFrigoOuvert.length; j++){
+            elementsGestionFrigoOuvert[j].style.display = "none";
+        }
+        for(i=0; i<elementsGestionFrigoFerme.length; i++){
+            elementsGestionFrigoFerme[i].style.display = "block";
         }
     }
 }
