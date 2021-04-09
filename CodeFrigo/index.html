@@ -5,27 +5,39 @@
     <title>Mini projet Frigo partagé</title>
     <link rel="shortcut icon" type="image/x-icon" href="Images/iconeFrigo.jpg" />
     <meta name="description" content="frigo partagé" />
+    <!-- balise meta pour un codage responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css" media="all" />
   </head>
   <body>
-  <h1>Bienvenue en cuisine !</h1>
-    <img src="Images/FrigoFerme.png" alt="frigo fermé" id="frigo">
-    <div>
-      <h2>Dans votre frigo :</h2>
-      <div>
-        <h3>Rechercher un article :</h3>
-        <label for="rechercher"></label><input type="text" name="recherche" id="recherche" />
-        <button id="boutonRechercher" name="Rechercher">Rechercher</button>
-        <ul id="resultatRecherche"></ul>
+    <div class="header">
+      <h1>Bienvenue en cuisine !</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-8 frigo">
+        <img src="Images/FrigoFerme.png" alt="frigo fermé" id="imageFrigo">
       </div>
-      <ul id="mesArticles"></ul>
-      <div>
-        <h3>Ajouter un article :</h3>
-        <label for="article"></label><input type="text" name="newArticle" id="newArticle" required=true />
-        <label for="quantite"></label><input type="text" name="quantite" id="quantite" />
-        <button id="ajouterArticle" name="ajouterArticle">Ajouter au frigo</button>
+
+      <div class="col-4 contenuFrigo">
+        <h2>Dans votre frigo :</h2>
+        <div class="rechercheArticle">
+          <h3>Rechercher un article :</h3>
+          <label for="rechercher"></label><input type="text" name="recherche" id="recherche" />
+          <button id="boutonRechercher" name="Rechercher">Rechercher</button>
+          <ul id="resultatRecherche"></ul>
+        </div>
+        <ul id="mesArticles"></ul>
+        <div class="ajoutArticle">
+          <h3>Ajouter un article :</h3>
+          <label for="article"></label><input type="text" name="newArticle" id="newArticle" required=true />
+          <label for="quantite"></label><input type="text" name="quantite" id="quantite" />
+          <button id="ajouterArticle" name="ajouterArticle">Ajouter au frigo</button>
+        </div>
       </div>
     </div>
+
     <script src="frigo.js"></script>
+
   </body>
 </html>

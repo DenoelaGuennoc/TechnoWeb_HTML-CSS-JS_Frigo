@@ -1,11 +1,12 @@
-document.getElementById("frigo").addEventListener("click", ouvreFrigo);
+document.getElementById("imageFrigo").addEventListener("click", ouvreFrigo);
 
 //Fonction de changement d'image au clic
 //Permet de passer d'un frigo fermé à un frigo ouvert
 function ouvreFrigo() {
-    let imageActuelle = document.getElementById("frigo");
+    let imageActuelle = document.getElementById("imageFrigo");
     if(imageActuelle.src.match("Images/FrigoFerme.png")){
         imageActuelle.src = "Images/FrigoOuvert.png";
+        listeMesArticles();
     }
     else {
         imageActuelle.src = "Images/FrigoFerme.png";
@@ -39,7 +40,6 @@ function nouveauProduit(){
         .catch( (error) => console.log(error));
 }
 
-document.getElementById("frigo").addEventListener("click", listeMesArticles);
 
 //Fonction permettant d'afficher la liste des articles enregistrés dans l'API
 function listeMesArticles(){
