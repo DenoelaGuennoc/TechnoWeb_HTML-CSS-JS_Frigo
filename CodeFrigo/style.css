@@ -33,11 +33,16 @@ body{
 
 .header {
     color: red;
-    padding: 15px;
+    padding-left: 15px;
 }
 
 #imageFrigo {
     max-width: 100%;
     max-height: 80vh;
+    height: auto;
+}
+
+.imagePlus, .imageMoins, .imageSupprimer {
+    width: 1em;
     height: auto;
 }

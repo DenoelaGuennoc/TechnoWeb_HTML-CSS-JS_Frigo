@@ -58,10 +58,11 @@ function listeMesArticles(){
             let resHTML = "";
             for (let a of articles) {
                 resHTML = 
-                    resHTML + "<li id=\"listeElement_" + a.id + "\">" + a.nom + " (" + a.qte + ")"
-                    + "<button id=\"plusUn_" + a.id + "\" " + "name=\"plusUn\">+1</button>"
-                    + " <button id=\"moinsUn_" + a.id + "\" " + "name=\"moinsUn\">-1</button>"
-                    + " <button id=\"suppr_" + a.id + "\" " + "name=\"supprimer\">Supprimer</button>"
+                    resHTML + "<li id=\"listeElement_" + a.id + "\">" + a.nom
+                    + "<img src=\"Images/moins.png\" alt=\"-1\" class=\"imageMoins\" id=\"moinsUn_" + a.id + "\" HSPACE=\"5\">"
+                    + a.qte
+                    + "<img src=\"Images/plus.png\" alt=\"+1\" class=\"imagePlus\" id=\"plusUn_" + a.id + "\" HSPACE=\"5\">"
+                    + "<img src=\"Images/supprimer.png\" alt=\"suppr\" class=\"imageSupprimer\" id=\"suppr_" + a.id + "\" HSPACE=\"5\">"
                     + "</li>";
                 
             }
